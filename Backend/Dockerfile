@@ -1,6 +1,6 @@
-FROM php:8.2-cli
+FROM php:8.4-cli
 
-# Install system dependencies
+# Install system dependencies for Postgres and Zip
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
@@ -16,11 +16,10 @@ WORKDIR /app
 # Copy application files
 COPY . .
 
-# Install PHP dependencies without running post-autoload-dump scripts
+# Install dependencies without running post-autoload scripts
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Set port default
 ENV PORT=8000
 
-# Run migrations and start server on container run
+# Run migrations and start server on launch
 CMD sh -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
