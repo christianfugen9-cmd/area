@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Link, Route, Routes, useNavigate, useParams, useLocation, useSearchParams } from "react-router-dom";
-import { AlertCircle, ArrowLeft, ChevronDown, ChevronRight, ClipboardCheck, Eye, FileText, FolderOpen, GraduationCap, Loader2, Plus, Search, Settings2, Trash2, Upload, X } from "lucide-react";
+import { AlertCircle, ArrowLeft, ChevronDown, ChevronRight, ClipboardCheck, Eye, FileText, FolderOpen, GraduationCap, Lock, LogOut, Loader2, Plus, Search, Settings2, Trash2, Upload, X } from "lucide-react";
 import { endpoints, apiErrorMessage } from "./api";
 import type { Area, Parameter, Indicator, SectionType, AttachableType, FileAttachment } from "./types";
 import { FacultyPage, FACULTY_CATEGORIES } from "./faculty";
@@ -136,7 +136,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
           )}
         </div>
       </nav>
-      <div className="sidebar-foot"><div className="mini-dot" /> Laravel API connected locally</div>
+      <div className="sidebar-foot">
+        <div style={{display:'flex',alignItems:'center',gap:'6px',marginBottom:'8px'}}><div className="mini-dot" /> Laravel API connected locally</div>
+        <button className="logout-btn" onClick={() => { sessionStorage.removeItem('aaccup_auth'); window.location.reload(); }}>
+          <LogOut size={13} /> Sign out
+        </button>
+      </div>
     </aside>
     <main className="main">{children}</main>
   </div>
@@ -465,4 +470,100 @@ function ParameterPage() {
 }
 
 function App() { return <Routes><Route path="/" element={<AreasPage />} /><Route path="/areas/:areaId" element={<AreaDetail />} /><Route path="/parameters/:id" element={<ParameterPage />} /><Route path="/faculty" element={<FacultyPage />} /><Route path="*" element={<AreasPage />} /></Routes> }
-createRoot(document.getElementById("root")!).render(<React.StrictMode><BrowserRouter><App /></BrowserRouter></React.StrictMode>);
+
+const CREDS = { user: 'admin.area', pass: 'area123-pass' };
+
+function LoginPage({ onLogin }: { onLogin: () => void }) {
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
+  const [showPass, setShowPass] = useState(false);
+  const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true); setErr('');
+    setTimeout(() => {
+      if (user === CREDS.user && pass === CREDS.pass) {
+        sessionStorage.setItem('aaccup_auth', '1');
+        onLogin();
+      } else {
+        setErr('Invalid username or password.');
+      }
+      setBusy(false);
+    }, 600);
+  }
+
+  return (
+    <div className="login-bg">
+      <div className="login-glow login-glow-1" />
+      <div className="login-glow login-glow-2" />
+      <div className="login-card glass">
+        <div className="login-brand">
+          <div className="login-brand-mark"><ClipboardCheck size={22} /></div>
+          <div>
+            <strong>AACCUP Evaluate</strong>
+            <span>Accreditation Management System</span>
+          </div>
+        </div>
+        <div className="login-divider" />
+        <h2 className="login-title">Sign in to continue</h2>
+        <p className="login-sub">Enter your credentials to access the evaluation workspace.</p>
+        <form onSubmit={submit} className="login-form">
+          <label>
+            <span>Username</span>
+            <div className="login-input-wrap">
+              <input
+                type="text"
+                value={user}
+                onChange={e => setUser(e.target.value)}
+                placeholder="admin.area"
+                autoComplete="username"
+                required
+              />
+            </div>
+          </label>
+          <label>
+            <span>Password</span>
+            <div className="login-input-wrap">
+              <input
+                type={showPass ? 'text' : 'password'}
+                value={pass}
+                onChange={e => setPass(e.target.value)}
+                placeholder="••••••••••"
+                autoComplete="current-password"
+                required
+              />
+              <button type="button" className="login-eye" onClick={() => setShowPass(!showPass)} tabIndex={-1}>
+                <Eye size={15} />
+              </button>
+            </div>
+          </label>
+          {err && <div className="field-error"><AlertCircle size={14} />{err}</div>}
+          <button className="btn primary login-submit" disabled={busy}>
+            {busy ? <><Loader2 size={15} className="spin" /> Signing in…</> : <><Lock size={15} /> Sign in</>}
+          </button>
+        </form>
+        <div className="login-footer">
+          <span className="mini-dot" />Secured · AACCUP Accreditation Platform
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem('aaccup_auth') === '1');
+  if (!authed) return <LoginPage onLogin={() => setAuthed(true)} />;
+  return <>{children}</>;
+}
+
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthGate>
+        <App />
+      </AuthGate>
+    </BrowserRouter>
+  </React.StrictMode>
+);

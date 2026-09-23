@@ -402,3 +402,32 @@
   .aaccup-add-form input:last-of-type { grid-column: 1 / -1; }
 }
 
+
+/* -- Login Page ------------------------------------------- */
+.login-bg{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 20% 20%,rgba(111,85,255,.28),transparent 40%),radial-gradient(circle at 80% 80%,rgba(48,195,255,.20),transparent 40%),#080b17;position:relative;overflow:hidden;padding:20px}
+.login-glow{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.login-glow-1{width:420px;height:420px;background:rgba(130,100,255,.18);top:-120px;left:-100px;animation:glowDrift 8s ease-in-out infinite alternate}
+.login-glow-2{width:380px;height:380px;background:rgba(60,200,255,.13);bottom:-100px;right:-80px;animation:glowDrift 10s ease-in-out infinite alternate-reverse}
+@keyframes glowDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.08)}}
+.login-card{width:min(440px,100%);border-radius:28px;padding:36px 38px;position:relative;z-index:1;animation:cardIn .5s cubic-bezier(.22,.68,0,1.2) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.login-brand{display:flex;align-items:center;gap:14px;margin-bottom:4px}
+.login-brand-mark{width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#a795ff,#56d6ff);color:#101328;display:grid;place-items:center;box-shadow:0 10px 32px rgba(130,105,255,.38);flex-shrink:0}
+.login-brand strong{display:block;font-size:17px;font-weight:800;letter-spacing:-.03em;color:#eef2ff}
+.login-brand span{display:block;font-size:11px;color:#7a86a4;margin-top:2px}
+.login-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);margin:22px 0}
+.login-title{font-size:22px;font-weight:800;letter-spacing:-.04em;margin:0 0 6px}
+.login-sub{color:#8290b1;font-size:13px;margin:0 0 22px;line-height:1.5}
+.login-form{display:grid;gap:14px}
+.login-form label{display:grid;gap:7px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#7c88a8}
+.login-input-wrap{position:relative}
+.login-input-wrap input{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.22);color:white;border-radius:12px;padding:12px 42px 12px 14px;font:inherit;font-size:14px;outline:0;transition:border-color .18s ease,box-shadow .18s ease}
+.login-input-wrap input::placeholder{color:#4a5270}
+.login-input-wrap input:focus{border-color:rgba(156,140,255,.65);box-shadow:0 0 0 3px rgba(130,110,255,.14)}
+.login-eye{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:#6b7590;cursor:pointer;padding:4px;display:grid;place-items:center;border-radius:6px;transition:color .15s}
+.login-eye:hover{color:#c0c8e0}
+.login-submit{width:100%;justify-content:center;padding:13px;font-size:14px;border-radius:13px;margin-top:4px;letter-spacing:.01em}
+.login-footer{margin-top:24px;text-align:center;font-size:11px;color:#4e5a74;display:flex;align-items:center;justify-content:center;gap:6px}
+.login-footer .mini-dot{margin-right:0}
+.logout-btn{display:flex;align-items:center;gap:7px;background:rgba(255,80,110,.08);border:1px solid rgba(255,80,110,.18);color:#e47d96;border-radius:9px;padding:7px 11px;font:inherit;font-size:11px;font-weight:600;cursor:pointer;width:100%;transition:all .15s ease}
+.logout-btn:hover{background:rgba(255,80,110,.18);color:#ff9cb2;border-color:rgba(255,80,110,.38)}
